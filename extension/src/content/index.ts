@@ -42,9 +42,9 @@ chrome.runtime.onMessage.addListener((message) => {
 
 // ============================================================================
 // DEV-ONLY TEST HELPERS
-// These will not be included in production builds (when VITE runs with --mode production)
+// These will not be included in production builds
 // ============================================================================
-if (import.meta.env.DEV) {
+if (import.meta.env.VITE_ENABLE_TEST_HELPERS === 'true') {
   // Manual testing helper for overlay only
   // @ts-ignore - Expose for console testing
   window.__testAdhanOverlay = () => {
@@ -105,5 +105,17 @@ if (import.meta.env.DEV) {
     }, 5000);
   };
 
-  console.log('🛠️ Dev mode: Test helpers available - window.__testAdhanOverlay() and window.__testFullFlow()');
+  // Test audio playback only
+  // @ts-ignore - Expose for console testing
+  window.__testAudio = () => {
+    console.log('🎵 Testing Adhan audio playback...');
+    const adhan = createAdhanPlayer();
+    
+    adhan.play(() => {
+      console.log('✅ Audio playback completed');
+    });
+    console.log('ℹ️  Audio should be playing now. Check your volume!');
+  };
+
+  console.log('🛠️ Dev mode: Test helpers available - window.__testAdhanOverlay(), window.__testFullFlow(), window.__testAudio()');
 }
