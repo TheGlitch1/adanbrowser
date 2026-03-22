@@ -1,0 +1,3 @@
+# Application layer – use cases and orchestration.
+# Coordinates domain logic and infrastructure. No browser APIs directly.
+# Add subdirectories per use case: application/<useCase>/

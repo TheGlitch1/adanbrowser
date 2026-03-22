@@ -1,0 +1,19 @@
+{
+  "name": "adanbrowser",
+  "version": "0.1.0",
+  "description": "Chrome browser extension – TypeScript + Vite + Manifest V3",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite build --watch",
+    "build": "vite build",
+    "type-check": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.300",
+    "eslint": "^9.0.0",
+    "prettier": "^3.0.0",
+    "typescript": "^5.4.0",
+    "vite": "^6.0.0"
+  }
+}

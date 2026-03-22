@@ -1,0 +1,31 @@
+{
+  "manifest_version": 3,
+  "name": "AdanBrowser",
+  "version": "0.1.0",
+  "description": "Interrupts YouTube playback at prayer times and plays the Adhan.",
+  "default_locale": "en",
+  "background": {
+    "service_worker": "background/index.js",
+    "type": "module"
+  },
+  "action": {
+    "default_popup": "popup/index.html",
+    "default_title": "AdanBrowser"
+  },
+  "options_page": "options/index.html",
+  "content_scripts": [
+    {
+      "matches": ["*://*.youtube.com/watch*"],
+      "js": ["content/index.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["adhan.mp3"],
+      "matches": ["*://*.youtube.com/*"]
+    }
+  ],
+  "permissions": ["alarms", "storage"],
+  "host_permissions": ["*://*.youtube.com/*"]
+}

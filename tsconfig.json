@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "lib": [
+      "ESNext",
+      "DOM"
+    ],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "@lib/*": [
+        "extension/src/lib/*"
+      ],
+      "@shared/*": [
+        "extension/src/shared/*"
+      ],
+      "@domain/*": [
+        "extension/src/domain/*"
+      ],
+      "@application/*": [
+        "extension/src/application/*"
+      ],
+      "@infrastructure/*": [
+        "extension/src/infrastructure/*"
+      ]
+    }
+  },
+  "include": [
+    "extension/src/**/*",
+    "vite.config.ts"
+  ]
+}

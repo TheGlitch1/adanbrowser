@@ -1,0 +1,99 @@
+./
+├── .github/
+│   ├── copilot-instructions.md
+│   ├── prompts/
+│   │   ├── plan-feature.prompt.md
+│   │   ├── create-module.prompt.md
+│   │   ├── review-extension-architecture.prompt.md
+│   │   ├── generate-tests.prompt.md
+│   │   └── prepare-release.prompt.md
+│   └── agents/
+│       ├── extension-architect.agent.md
+│       ├── mv3-implementer.agent.md
+│       ├── qa-reviewer.agent.md
+│       ├── firefox-compat.agent.md
+│       └── docs-maintainer.agent.md
+├── .vscode/
+│   ├── settings.json
+│   ├── extensions.json
+│   └── tasks.json
+├── docker/
+│   ├── node/
+│   │   └── Dockerfile
+│   └── scripts/
+│       ├── dev.sh
+│       ├── build.sh
+│       ├── lint.sh
+│       └── test.sh
+├── docs/
+│   ├── PRODUCT_SCOPE.md
+│   ├── PROJECT_ROADMAP.md
+│   ├── JIRA_WORKFLOW.md
+│   ├── BROWSER_EXTENSION_NOTES.md
+│   ├── MV3_ARCHITECTURE.md
+│   ├── FIREFOX_COMPATIBILITY.md
+│   ├── STORAGE_STRATEGY.md
+│   ├── PERMISSIONS_MATRIX.md
+│   ├── MESSAGE_FLOW.md
+│   ├── DEBUGGING_GUIDE.md
+│   ├── TESTING_STRATEGY.md
+│   ├── RELEASE_CHECKLIST.md
+│   └── DECISIONS/
+│       ├── ADR-001-stack-choice.md
+│       ├── ADR-002-build-system.md
+│       └── ADR-003-browser-targets.md
+├── scripts/
+│   ├── dev
+│   ├── build
+│   ├── package
+│   ├── lint
+│   └── test
+├── extension/
+│   ├── public/
+│   │   ├── manifest.json
+│   │   ├── icons/
+│   │   └── static/
+│   └── src/
+│       ├── background/
+│       │   └── index.ts
+│       ├── content/
+│       │   └── index.ts
+│       ├── popup/
+│       │   ├── index.html
+│       │   ├── main.ts
+│       │   └── popup.css
+│       ├── options/
+│       │   ├── index.html
+│       │   └── main.ts
+│       ├── sidepanel/
+│       │   ├── index.html
+│       │   └── main.ts
+│       ├── lib/
+│       │   ├── browser-api.ts
+│       │   ├── storage.ts
+│       │   ├── messaging.ts
+│       │   ├── permissions.ts
+│       │   └── time.ts
+│       ├── domain/
+│       │   └── README.md
+│       ├── application/
+│       │   └── README.md
+│       ├── infrastructure/
+│       │   └── README.md
+│       ├── shared/
+│       │   ├── constants/
+│       │   ├── types/
+│       │   └── utils/
+│       └── tests/
+│           ├── unit/
+│           ├── integration/
+│           └── fixtures/
+├── package.json
+├── tsconfig.json
+├── vite.config.ts
+├── eslint.config.js
+├── prettier.config.js
+├── .gitignore
+├── .dockerignore
+├── README.md
+└── CHANGELOG.md

@@ -1,0 +1,3 @@
+# Domain layer – pure business logic, no browser APIs allowed.
+# Entities, value objects, domain events, and repository interfaces go here.
+# Add subdirectories per feature: domain/<feature>/

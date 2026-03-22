@@ -1,0 +1,3 @@
+# Infrastructure layer – browser API wrappers and external integrations.
+# Implements interfaces defined in domain/. Allowed to use chrome.* APIs.
+# Add subdirectories per concern: infrastructure/storage/, infrastructure/messaging/, etc.

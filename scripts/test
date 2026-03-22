@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# scripts/test — run the test suite
+# TODO: configure a test runner (e.g. Vitest) and replace this placeholder.
+
+set -e
+echo "No tests configured yet. Add Vitest and update this script."
+exit 0

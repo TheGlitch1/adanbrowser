@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# scripts/build — production build
+# Output is written to dist/. Load dist/ as an unpacked extension in Chrome.
+
+set -e
+npx vite build

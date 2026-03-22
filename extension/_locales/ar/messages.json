@@ -1,0 +1,12 @@
+{
+  "prayer_reminder": {
+    "message": "حان وقت صلاة $PRAYER$.",
+    "description": "رسالة التذكير بالصلاة التي تظهر أثناء انقطاع الأذان",
+    "placeholders": {
+      "prayer": {
+        "content": "$1",
+        "example": "الظهر"
+      }
+    }
+  }
+}

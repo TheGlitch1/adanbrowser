@@ -1,0 +1,12 @@
+{
+  "prayer_reminder": {
+    "message": "It is time for $PRAYER$ prayer.",
+    "description": "Overlay message shown during the Adhan interruption",
+    "placeholders": {
+      "prayer": {
+        "content": "$1",
+        "example": "Dhuhr"
+      }
+    }
+  }
+}

@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# scripts/dev — watch mode build for development
+# Vite rebuilds on file changes; reload the extension manually in Chrome after each change.
+# Chrome: chrome://extensions → enable Developer mode → click "Reload"
+
+set -e
+npx vite build --watch

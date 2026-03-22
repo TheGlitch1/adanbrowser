@@ -1,0 +1,2 @@
+# Shared browser utility helpers (type guards, chrome API wrappers, etc.)
+# Add .ts files here as the project grows.
