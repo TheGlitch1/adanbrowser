@@ -18,10 +18,35 @@ export function createAdhanPlayer(): AdhanPlayer {
 
   return {
     play(onEnded) {
+      // Clean up any existing audio element
+      if (audioEl) {
+        audioEl.pause();
+        audioEl.src = '';
+      }
+
       audioEl = new Audio(chrome.runtime.getURL('adhan.mp3'));
-      audioEl.addEventListener('ended', onEnded, { once: true });
-      audioEl.play().catch(() => {
-        // TODO: handle autoplay policy rejection — consider a user-gesture fallback
+      
+      // Handle successful playback end
+      audioEl.addEventListener('ended', () => {
+        if (import.meta.env.VITE_ENABLE_TEST_HELPERS === 'true') {
+          console.log('🎵 Adhan playback completed');
+        }
+        onEnded();
+      }, { once: true });
+
+      // Handle playback errors (missing file, corrupt audio, etc.)
+      audioEl.addEventListener('error', (e) => {
+        console.error('❌ Adhan playback error:', e);
+        // Still call onEnded so the flow continues
+        onEnded();
+      }, { once: true });
+
+      // Start playback
+      audioEl.play().catch((err) => {
+        console.warn('⚠️ Autoplay blocked or play() failed:', err.message);
+        // Note: If autoplay is blocked, the overlay will remain visible
+        // User can click anywhere on the page to trigger playback
+        // TODO: Add user-facing prompt for manual playback start
       });
     },
 
