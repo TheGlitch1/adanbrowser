@@ -36,15 +36,15 @@
 
 ## Epic 2 — Core Interruption Flow (YouTube MVP)
 
-| #    | Feature / Ticket                                                                                             | Status        | Notes                                                                                                                                 |
-| ---- | ------------------------------------------------------------------------------------------------------------ | ------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| E2-1 | Implement `YouTubePlayerController` — detect, pause, resume `#movie_player video`                            | `DONE`        | File scaffolded at `content/youtube/YouTubePlayerController.ts`. Selector must target primary player only, not ads/previews           |
-| E2-2 | Implement `AdhanOverlay` — inject styled overlay with i18n message, guard against duplicate instances        | `DONE`        | File scaffolded at `content/youtube/AdhanOverlay.ts`. Styles are inline stubs — needs real design pass                                |
-| E2-3 | Implement `AdhanPlayer` — play `adhan.mp3` via `chrome.runtime.getURL`, fire `onEnded` callback              | `DONE`        | File scaffolded at `content/youtube/AdhanPlayer.ts`. Requires E1-5 (audio asset)                                                      |
+| #    | Feature / Ticket                                                                                             | Status | Notes                                                                                                                                 |
+| ---- | ------------------------------------------------------------------------------------------------------------ | ------ | ------------------------------------------------------------------------------------------------------------------------------------- |
+| E2-1 | Implement `YouTubePlayerController` — detect, pause, resume `#movie_player video`                            | `DONE` | File scaffolded at `content/youtube/YouTubePlayerController.ts`. Selector must target primary player only, not ads/previews           |
+| E2-2 | Implement `AdhanOverlay` — inject styled overlay with i18n message, guard against duplicate instances        | `DONE` | File scaffolded at `content/youtube/AdhanOverlay.ts`. Styles are inline stubs — needs real design pass                                |
+| E2-3 | Implement `AdhanPlayer` — play `adhan.mp3` via `chrome.runtime.getURL`, fire `onEnded` callback              | `DONE` | File scaffolded at `content/youtube/AdhanPlayer.ts`. Requires E1-5 (audio asset)                                                      |
 | E2-4 | Wire content script interruption flow — `ADHAN_TRIGGER` → pause → overlay → play → resume → `ADHAN_COMPLETE` | `DONE` | Logic scaffolded in `content/index.ts`. Depends on E2-1, E2-2, E2-3                                                                   |
-| E2-5 | Implement `scheduleAdhan` use case — replace 10-second dev stub with real prayer time scheduling             | `TODO`        | Currently a hardcoded 10s stub in `application/prayer/scheduleAdhan.ts`. Blocked until prayer time data shape is decided (see Epic 4) |
-| E2-6 | Implement `triggerAdhan` use case — query YouTube tabs and dispatch `ADHAN_TRIGGER`                          | `TODO`        | Scaffolded in `application/prayer/triggerAdhan.ts`. Logic is complete; needs integration test                                         |
-| E2-7 | Wire background service worker — `onAlarm` → `triggerAdhan`, `onInstalled`/`onStartup` → `scheduleAdhan`     | `TODO`        | Scaffolded in `background/index.ts`. Depends on E2-5, E2-6                                                                            |
+| E2-5 | Implement `scheduleAdhan` use case — replace 10-second dev stub with real prayer time scheduling             | `TODO` | Currently a hardcoded 10s stub in `application/prayer/scheduleAdhan.ts`. Blocked until prayer time data shape is decided (see Epic 4) |
+| E2-6 | Implement `triggerAdhan` use case — query YouTube tabs and dispatch `ADHAN_TRIGGER`                          | `TODO` | Scaffolded in `application/prayer/triggerAdhan.ts`. Logic is complete; needs integration test                                         |
+| E2-7 | Wire background service worker — `onAlarm` → `triggerAdhan`, `onInstalled`/`onStartup` → `scheduleAdhan`     | `TODO` | Scaffolded in `background/index.ts`. Depends on E2-5, E2-6                                                                            |
 
 ---
 
@@ -81,11 +81,12 @@
 
 ## Epic 6 — Overlay UX & Polish
 
-| #    | Feature / Ticket                                                                               | Status | Notes                                                                                                                  |
-| ---- | ---------------------------------------------------------------------------------------------- | ------ | ---------------------------------------------------------------------------------------------------------------------- |
-| E6-1 | Design and implement overlay visuals — background, typography, icon                            | `TODO` | Current styles in `AdhanOverlay.ts` are inline stubs. Keep it respectful and non-aggressive per `MVP_YOUTUBE_ADHAN.md` |
-| E6-2 | Ensure overlay does not break YouTube navigation (SPA route changes)                           | `TODO` | YouTube is a SPA — if the user navigates away mid-Adhan the overlay must auto-clean                                    |
-| E6-3 | Ensure overlay does not appear if a second `ADHAN_TRIGGER` arrives while one is already active | `TODO` | Guard exists in `AdhanOverlay.ts` (ID check) — needs explicit test                                                     |
+| #    | Feature / Ticket                                                                               | Status | Notes                                                                                                                                                             |
+| ---- | ---------------------------------------------------------------------------------------------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| E6-1 | Design and implement overlay visuals — background, typography, icon                            | `TODO` | Current styles in `AdhanOverlay.ts` are inline stubs. Keep it respectful and non-aggressive per `MVP_YOUTUBE_ADHAN.md`                                            |
+| E6-2 | Ensure overlay does not break YouTube navigation (SPA route changes)                           | `TODO` | YouTube is a SPA — if the user navigates away mid-Adhan the overlay must auto-clean                                                                               |
+| E6-3 | Ensure overlay does not appear if a second `ADHAN_TRIGGER` arrives while one is already active | `TODO` | Guard exists in `AdhanOverlay.ts` (ID check) — needs explicit test                                                                                                |
+| E6-4 | **Add skip/dismiss button to overlay** — allow users to exit Adhan early and resume video      | `TODO` | **CRITICAL UX**: Add close button (×) + Escape key handler. When dismissed: stop audio, hide overlay, resume video. Send ADHAN_COMPLETE with `skipped: true` flag |
 
 ---
 
