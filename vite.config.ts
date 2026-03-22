@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
+import { copyFileSync, mkdirSync, rmSync } from 'fs';
 
 export default defineConfig({
   // Copies everything in extension/public/ (including manifest.json) to dist/
@@ -28,6 +29,33 @@ export default defineConfig({
       },
     },
   },
+
+  plugins: [
+    {
+      name: 'move-html-files',
+      closeBundle() {
+        // Move HTML files to match manifest.json paths
+        const distDir = resolve(__dirname, 'dist');
+        
+        // Create target directories
+        mkdirSync(resolve(distDir, 'popup'), { recursive: true });
+        mkdirSync(resolve(distDir, 'options'), { recursive: true });
+        
+        // Move HTML files from nested structure to correct locations
+        copyFileSync(
+          resolve(distDir, 'extension/src/popup/index.html'),
+          resolve(distDir, 'popup/index.html')
+        );
+        copyFileSync(
+          resolve(distDir, 'extension/src/options/index.html'),
+          resolve(distDir, 'options/index.html')
+        );
+        
+        // Clean up the nested extension/src directory
+        rmSync(resolve(distDir, 'extension'), { recursive: true, force: true });
+      },
+    },
+  ],
 
   resolve: {
     alias: {

@@ -17,6 +17,7 @@ Before doing anything, read these files in order:
 ## Current project state (as of last session — March 22, 2026)
 
 ### What is done
+
 - Full project scaffold: all folders, all config files (`package.json`, `tsconfig.json`, `vite.config.ts`)
 - `manifest.json` — MV3, scoped to `*://*.youtube.com/watch*`, permissions: `alarms` + `storage`, `web_accessible_resources` for `adhan.mp3`
 - All architecture layers created — domain, application, infrastructure, lib, shared
@@ -34,6 +35,7 @@ Before doing anything, read these files in order:
 - Repository pushed to: https://github.com/TheGlitch1/adanbrowser.git
 
 ### What is NOT done (next steps in order)
+
 1. **E1-1** `npm install` — dependencies have never been installed (switching to local machine)
 2. **E1-2** `npm run build` — first build, fix any compile errors
 3. **E1-3** Load `dist/` as unpacked extension in Chrome — confirm no manifest errors
@@ -44,11 +46,20 @@ Before doing anything, read these files in order:
 ## Your task
 
 1. Confirm the current state by listing the next `TODO` ticket from `docs/FEATURES.md`
-2. Implement it following the architecture rules in `copilot-instructions.md`
-3. After each ticket is complete, tell the developer to update `docs/FEATURES.md` status to `DONE`
-4. Then move to the next ticket
+2. Create a feature branch: `git checkout develop && git checkout -b feature/E2-1-description`
+3. Update `docs/FEATURES.md` status to `IN PROGRESS`
+4. Implement the feature following the architecture rules in `copilot-instructions.md`
+5. Test thoroughly (manual + type-check + build)
+6. Update `docs/FEATURES.md` status to `DONE`
+7. Commit: `git commit -am "feat: description (E2-1)"`
+8. If everything is verified working, merge to develop: `git checkout develop && git merge --no-ff feature/E2-1-description`
+9. Delete the feature branch: `git branch -d feature/E2-1-description`
+10. Move to the next ticket
+
+**You must automate steps 2-9 for each feature.**
 
 ## Hard constraints reminder
+
 - Chrome / Chromium first, Manifest V3
 - YouTube only for MVP
 - `chrome.*` APIs only in `infrastructure/` layer
