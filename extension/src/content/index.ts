@@ -117,5 +117,59 @@ if (import.meta.env.VITE_ENABLE_TEST_HELPERS === 'true') {
     console.log('ℹ️  Audio should be playing now. Check your volume!');
   };
 
-  console.log('🛠️ Dev mode: Test helpers available - window.__testAdhanOverlay(), window.__testFullFlow(), window.__testAudio()');
+  // Complete interruption flow with audio (simulates ADHAN_TRIGGER message)
+  // @ts-ignore - Expose for console testing
+  window.__testCompleteFlow = () => {
+    console.log('🧪 Testing COMPLETE interruption flow (pause → overlay → audio → resume)...');
+    
+    const player = createYouTubePlayerController();
+    const overlay = createAdhanOverlay();
+    const adhan = createAdhanPlayer();
+
+    if (!player) {
+      console.error('❌ No YouTube player found. Are you on a watch page?');
+      return;
+    }
+
+    const wasPlaying = player.isPlaying();
+    console.log(`📹 Video was ${wasPlaying ? 'playing' : 'paused'}`);
+
+    // Pause the video
+    player.pause();
+    console.log('⏸️  Video paused');
+
+    // Show overlay
+    overlay.show('Dhuhr');
+    console.log('✅ Overlay shown');
+
+    // Play Adhan audio (this is the real 3+ minute Adhan)
+    console.log('🎵 Playing Adhan audio... (this will take ~3 minutes)');
+    adhan.play(() => {
+      // This callback fires when audio ends
+      console.log('🎵 Adhan playback completed');
+      
+      // Hide overlay
+      overlay.hide();
+      console.log('✅ Overlay hidden');
+
+      // Resume video if it was playing
+      if (wasPlaying) {
+        console.log('▶️  Attempting to resume video...');
+        player.resume();
+        setTimeout(() => {
+          if (player.isPlaying()) {
+            console.log('✅ Video successfully resumed');
+          } else {
+            console.error('❌ Video did not resume (possibly autoplay blocked)');
+          }
+        }, 500);
+      } else {
+        console.log('ℹ️  Video was not playing, so not resuming');
+      }
+
+      console.log('🎉 COMPLETE FLOW TEST FINISHED!');
+    });
+  };
+
+  console.log('🛠️ Dev mode: Test helpers available - window.__testAdhanOverlay(), window.__testFullFlow(), window.__testAudio(), window.__testCompleteFlow()');
 }
