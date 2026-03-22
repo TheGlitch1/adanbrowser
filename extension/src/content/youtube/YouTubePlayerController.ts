@@ -34,7 +34,8 @@ export function createYouTubePlayerController(): YouTubePlayerController | null 
     resume() {
       // play() returns a Promise; autoplay policy rejection is intentionally ignored here
       // because the user will have interacted with the page to reach this state.
-      video.play().catch(() => {
+      video.play().catch((err) => {
+        console.warn('⚠️ Autoplay blocked or play() failed:', err.message);
         // TODO: surface a user-facing prompt if autoplay is blocked
       });
     },

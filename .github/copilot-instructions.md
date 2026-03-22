@@ -75,6 +75,15 @@ extension/src/
   - Copilot MUST create feature branches for each ticket
   - Copilot MUST merge to develop only when feature is verified working
 
+## Testing rules
+
+- **Testing strategy**: See `docs/TESTING_STRATEGY.md` for comprehensive approach
+- **Manual testing**: Follow `docs/MANUAL_TEST_CHECKLIST.md` before releases
+- **Dev-only test helpers**: Wrap in `if (import.meta.env.DEV)` — never ship to production
+- **Unit tests**: Use Vitest (to be set up in E7-1) for isolated module testing
+- **Test each feature**: After implementation, verify with type-check + build + manual test
+- **No test pollution**: Test code must not pollute production builds
+
 ## Browser extension rules
 
 - Respect Manifest V3 constraints.
