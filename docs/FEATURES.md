@@ -42,9 +42,9 @@
 | E2-2 | Implement `AdhanOverlay` — inject styled overlay with i18n message, guard against duplicate instances        | `DONE` | File scaffolded at `content/youtube/AdhanOverlay.ts`. Styles are inline stubs — needs real design pass                                |
 | E2-3 | Implement `AdhanPlayer` — play `adhan.mp3` via `chrome.runtime.getURL`, fire `onEnded` callback              | `DONE` | File scaffolded at `content/youtube/AdhanPlayer.ts`. Requires E1-5 (audio asset)                                                      |
 | E2-4 | Wire content script interruption flow — `ADHAN_TRIGGER` → pause → overlay → play → resume → `ADHAN_COMPLETE` | `DONE` | Logic scaffolded in `content/index.ts`. Depends on E2-1, E2-2, E2-3                                                                   |
-| E2-5 | Implement `scheduleAdhan` use case — replace 10-second dev stub with real prayer time scheduling             | `TODO` | Currently a hardcoded 10s stub in `application/prayer/scheduleAdhan.ts`. Blocked until prayer time data shape is decided (see Epic 4) |
+| E2-5 | Implement `scheduleAdhan` use case — replace 10-second dev stub with real prayer time scheduling             | `TODO` | ⛔ **BLOCKED by E4-1** — prayer time data source not yet decided. Current stub fires alarm 10s from now for dev testing only. Unblock by completing E4-1 first |
 | E2-6 | Implement `triggerAdhan` use case — query YouTube tabs and dispatch `ADHAN_TRIGGER`                          | `DONE` | Scaffolded in `application/prayer/triggerAdhan.ts`. Logic is complete; needs integration test                                         |
-| E2-7 | Wire background service worker — `onAlarm` → `triggerAdhan`, `onInstalled`/`onStartup` → `scheduleAdhan`     | `TODO` | Scaffolded in `background/index.ts`. Depends on E2-5, E2-6                                                                            |
+| E2-7 | Wire background service worker — `onAlarm` → `triggerAdhan`, `onInstalled`/`onStartup` → `scheduleAdhan`     | `DONE` | Scaffolded in `background/index.ts`. Depends on E2-5, E2-6                                                                            |
 
 ---
 
