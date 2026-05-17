@@ -27,16 +27,29 @@ chrome.runtime.onMessage.addListener((message) => {
 
   const wasPlaying = player?.isPlaying() ?? false;
   player?.pause();
-  overlay.show(prayerName);
 
-  adhan.play(() => {
+  // Shared completion logic for both natural end and early dismiss
+  const complete = (skipped: boolean = false) => {
     overlay.hide();
+    adhan.stop(); // Stop audio if still playing
     if (wasPlaying) player?.resume();
 
     chrome.runtime.sendMessage({
       type: 'ADHAN_COMPLETE',
-      payload: { prayerName, resumed: wasPlaying },
+      payload: { prayerName, resumed: wasPlaying, skipped },
     } satisfies ExtensionMessage);
+  };
+
+  // Show overlay with dismiss handler
+  overlay.show(prayerName, () => {
+    // User dismissed early (close button or Escape key)
+    complete(true);
+  });
+
+  // Play audio with natural completion handler
+  adhan.play(() => {
+    // Audio finished naturally
+    complete(false);
   });
 });
 
@@ -171,5 +184,46 @@ if (import.meta.env.VITE_ENABLE_TEST_HELPERS === 'true') {
     });
   };
 
-  console.log('🛠️ Dev mode: Test helpers available - window.__testAdhanOverlay(), window.__testFullFlow(), window.__testAudio(), window.__testCompleteFlow()');
+  // Test dismiss/skip functionality (close button and Escape key)
+  // @ts-ignore - Expose for console testing
+  window.__testDismiss = () => {
+    console.log('🧪 Testing dismiss/skip functionality...');
+    console.log('ℹ️  Click the close button (×) or press Escape to test dismiss');
+    
+    const player = createYouTubePlayerController();
+    const overlay = createAdhanOverlay();
+    const adhan = createAdhanPlayer();
+
+    if (!player) {
+      console.error('❌ No YouTube player found. Are you on a watch page?');
+      return;
+    }
+
+    const wasPlaying = player.isPlaying();
+    console.log(`📹 Video was ${wasPlaying ? 'playing' : 'paused'}`);
+    player.pause();
+    console.log('⏸️  Video paused');
+
+    // Show overlay with dismiss callback
+    overlay.show('Dhuhr', () => {
+      console.log('❌ User dismissed (close button or Escape pressed)');
+      overlay.hide();
+      adhan.stop();
+      console.log('🔇 Audio stopped');
+      
+      if (wasPlaying) {
+        player.resume();
+        console.log('▶️  Video resumed');
+      }
+      console.log('✅ Dismiss test complete!');
+    });
+
+    // Start audio
+    adhan.play(() => {
+      console.log('🎵 Audio ended naturally (user did not dismiss)');
+    });
+    console.log('🎵 Audio playing... Click × or press Escape to dismiss');
+  };
+
+  console.log('🛠️ Dev mode: Test helpers available - window.__testAdhanOverlay(), window.__testFullFlow(), window.__testAudio(), window.__testCompleteFlow(), window.__testDismiss()');
 }

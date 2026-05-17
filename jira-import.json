@@ -1,0 +1,307 @@
+{
+  "epics": [
+    {
+      "key": "EPIC-1",
+      "summary": "Dev Environment & Build Pipeline",
+      "description": "Set up development environment and verify build pipeline for the AdanBrowser Chrome extension.",
+      "stories": [
+        {
+          "key": "E1-1",
+          "summary": "Install npm dependencies and verify clean install",
+          "description": "Install npm dependencies (`npm install`) and verify clean install\n\n*Required packages:* `@types/chrome`, `vite`, `typescript`, `eslint`, `prettier` — all declared in `package.json`",
+          "status": "Done",
+          "labels": ["environment", "setup"]
+        },
+        {
+          "key": "E1-2",
+          "summary": "Verify npm run build produces valid dist folder",
+          "description": "Verify `npm run build` produces a valid `dist/` folder\n\n*Acceptance Criteria:*\n- All four Vite entry points must bundle without error: popup, options, background, content",
+          "status": "Done",
+          "labels": ["build", "vite"]
+        },
+        {
+          "key": "E1-3",
+          "summary": "Load unpacked extension in Chrome without manifest errors",
+          "description": "Load unpacked extension in Chrome and confirm it appears without manifest errors\n\n*Steps:*\n1. Open `chrome://extensions`\n2. Enable Dev mode\n3. Load `dist/`\n4. Verify no errors appear",
+          "status": "Done",
+          "labels": ["chrome", "manifest"]
+        },
+        {
+          "key": "E1-4",
+          "summary": "Verify type-check passes with zero errors",
+          "description": "Verify `npm run type-check` passes with zero errors\n\n*Dependencies:* Requires E1-1 first (needs `@types/chrome` in `node_modules`)",
+          "status": "Done",
+          "labels": ["typescript", "quality"]
+        },
+        {
+          "key": "E1-5",
+          "summary": "Add adhan.mp3 audio asset to extension/public/",
+          "description": "Add `adhan.mp3` audio asset to `extension/public/`\n\n*Required by:* `AdhanPlayer.ts` and declared in `manifest.json` → `web_accessible_resources`",
+          "status": "Done",
+          "labels": ["assets", "audio"]
+        }
+      ]
+    },
+    {
+      "key": "EPIC-2",
+      "summary": "Core Interruption Flow (YouTube MVP)",
+      "description": "Implement the core YouTube video interruption flow for prayer time notifications.",
+      "stories": [
+        {
+          "key": "E2-1",
+          "summary": "Implement YouTubePlayerController - detect, pause, resume player",
+          "description": "Implement `YouTubePlayerController` — detect, pause, resume `#movie_player video`\n\n*File:* `content/youtube/YouTubePlayerController.ts`\n*Note:* Selector must target primary player only, not ads/previews",
+          "status": "Done",
+          "labels": ["youtube", "controller", "content-script"]
+        },
+        {
+          "key": "E2-2",
+          "summary": "Implement AdhanOverlay with i18n support",
+          "description": "Implement `AdhanOverlay` — inject styled overlay with i18n message, guard against duplicate instances\n\n*File:* `content/youtube/AdhanOverlay.ts`\n*Note:* Styles are inline stubs — needs real design pass",
+          "status": "Done",
+          "labels": ["youtube", "overlay", "ui", "i18n"]
+        },
+        {
+          "key": "E2-3",
+          "summary": "Implement AdhanPlayer for audio playback",
+          "description": "Implement `AdhanPlayer` — play `adhan.mp3` via `chrome.runtime.getURL`, fire `onEnded` callback\n\n*File:* `content/youtube/AdhanPlayer.ts`\n*Dependencies:* Requires E1-5 (audio asset)",
+          "status": "Done",
+          "labels": ["audio", "player"]
+        },
+        {
+          "key": "E2-4",
+          "summary": "Wire content script interruption flow",
+          "description": "Wire content script interruption flow — `ADHAN_TRIGGER` → pause → overlay → play → resume → `ADHAN_COMPLETE`\n\n*File:* `content/index.ts`\n*Dependencies:* E2-1, E2-2, E2-3",
+          "status": "Done",
+          "labels": ["content-script", "integration", "messaging"]
+        },
+        {
+          "key": "E2-5",
+          "summary": "Implement scheduleAdhan use case with real prayer times",
+          "description": "Implement `scheduleAdhan` use case — replace 10-second dev stub with real prayer time scheduling\n\n*Current State:* Hardcoded 10s stub in `application/prayer/scheduleAdhan.ts`\n*Blocker:* Waiting for prayer time data shape decision (see Epic 4)",
+          "status": "To Do",
+          "labels": ["prayer-times", "scheduling", "use-case"]
+        },
+        {
+          "key": "E2-6",
+          "summary": "Implement triggerAdhan use case",
+          "description": "Implement `triggerAdhan` use case — query YouTube tabs and dispatch `ADHAN_TRIGGER`\n\n*File:* `application/prayer/triggerAdhan.ts`\n*Status:* Logic is complete; needs integration test",
+          "status": "To Do",
+          "labels": ["messaging", "use-case", "testing"]
+        },
+        {
+          "key": "E2-7",
+          "summary": "Wire background service worker",
+          "description": "Wire background service worker — `onAlarm` → `triggerAdhan`, `onInstalled`/`onStartup` → `scheduleAdhan`\n\n*File:* `background/index.ts`\n*Dependencies:* E2-5, E2-6",
+          "status": "To Do",
+          "labels": ["background", "service-worker", "integration"]
+        }
+      ]
+    },
+    {
+      "key": "EPIC-3",
+      "summary": "Infrastructure Adapters",
+      "description": "Validate and test all infrastructure adapters for Chrome APIs.",
+      "stories": [
+        {
+          "key": "E3-1",
+          "summary": "Validate alarmAdapter",
+          "description": "Validate `alarmAdapter` — create alarm, verify it fires, verify `onAlarm` listener is called\n\n*File:* `infrastructure/alarms/alarmAdapter.ts`\n*Test:* Needs manual smoke test or unit test",
+          "status": "To Do",
+          "labels": ["infrastructure", "alarms", "testing"]
+        },
+        {
+          "key": "E3-2",
+          "summary": "Validate messagingAdapter",
+          "description": "Validate `messagingAdapter` — `sendToYouTubeTabs` queries correct tabs and delivers message\n\n*File:* `infrastructure/messaging/messagingAdapter.ts`\n*Test:* Verify with a real open YouTube tab",
+          "status": "To Do",
+          "labels": ["infrastructure", "messaging", "testing"]
+        },
+        {
+          "key": "E3-3",
+          "summary": "Validate storageAdapter",
+          "description": "Validate `storageAdapter` — get/set roundtrip on `chrome.storage.local`\n\n*File:* `infrastructure/storage/storageAdapter.ts`\n*Note:* Not yet used — will be needed for Epic 4",
+          "status": "To Do",
+          "labels": ["infrastructure", "storage", "testing"]
+        }
+      ]
+    },
+    {
+      "key": "EPIC-4",
+      "summary": "Prayer Time Scheduling",
+      "description": "Implement real prayer time scheduling with persistence.",
+      "stories": [
+        {
+          "key": "E4-1",
+          "summary": "Define PrayerTime data source for MVP",
+          "description": "Define `PrayerTime` data source for MVP — hardcoded daily times or user-configurable input\n\n*File:* `domain/prayer/PrayerTime.ts`\n*Decision Needed:* Static list vs. user settings",
+          "status": "To Do",
+          "labels": ["domain", "prayer-times", "architecture"]
+        },
+        {
+          "key": "E4-2",
+          "summary": "Implement real scheduleAdhan use case",
+          "description": "Implement real `scheduleAdhan` use case — compute next prayer from current time and register alarm\n\n*Replaces:* The 10s dev stub\n*Dependencies:* E4-1",
+          "status": "To Do",
+          "labels": ["scheduling", "use-case", "prayer-times"]
+        },
+        {
+          "key": "E4-3",
+          "summary": "Persist prayer schedule to chrome.storage.local",
+          "description": "Persist prayer schedule to `chrome.storage.local` via `storageAdapter`\n\n*Purpose:* Schedule survives service worker restarts\n*Dependencies:* E4-2, E3-3",
+          "status": "To Do",
+          "labels": ["storage", "persistence", "infrastructure"]
+        },
+        {
+          "key": "E4-4",
+          "summary": "Re-schedule after each completed Adhan cycle",
+          "description": "Re-schedule after each completed Adhan cycle — `ADHAN_COMPLETE` triggers next `scheduleAdhan`\n\n*File:* Wire in `background/index.ts`\n*Dependencies:* E4-2",
+          "status": "To Do",
+          "labels": ["scheduling", "background", "integration"]
+        }
+      ]
+    },
+    {
+      "key": "EPIC-5",
+      "summary": "Localisation",
+      "description": "Implement and verify English and Arabic localizations with RTL support.",
+      "stories": [
+        {
+          "key": "E5-1",
+          "summary": "Verify en locale renders correctly in overlay",
+          "description": "Verify `en` locale renders correctly in overlay\n\n*File:* `_locales/en/messages.json`\n*Test:* Set Chrome language to English",
+          "status": "To Do",
+          "labels": ["i18n", "locale", "english"]
+        },
+        {
+          "key": "E5-2",
+          "summary": "Verify ar locale renders correctly with RTL",
+          "description": "Verify `ar` locale renders correctly in overlay (RTL text direction)\n\n*File:* `_locales/ar/messages.json`\n*Note:* Overlay may need `dir=\"rtl\"` style for Arabic",
+          "status": "To Do",
+          "labels": ["i18n", "locale", "arabic", "rtl"]
+        },
+        {
+          "key": "E5-3",
+          "summary": "Add prayer name translations to locale files",
+          "description": "Add prayer name translations to locale files for both `en` and `ar`\n\n*Current:* Prayer name is passed raw (e.g. `\"fajr\"`)\n*Required:* Should be capitalised/translated in the overlay message",
+          "status": "To Do",
+          "labels": ["i18n", "translations", "prayer-names"]
+        }
+      ]
+    },
+    {
+      "key": "EPIC-6",
+      "summary": "Overlay UX & Polish",
+      "description": "Polish the overlay user experience with proper design and interaction handling.",
+      "stories": [
+        {
+          "key": "E6-1",
+          "summary": "Design and implement overlay visuals",
+          "description": "Design and implement overlay visuals — background, typography, icon\n\n*Current:* Inline stubs in `AdhanOverlay.ts`\n*Guideline:* Keep it respectful and non-aggressive per `MVP_YOUTUBE_ADHAN.md`",
+          "status": "To Do",
+          "labels": ["ui", "design", "overlay"]
+        },
+        {
+          "key": "E6-2",
+          "summary": "Ensure overlay handles YouTube SPA navigation",
+          "description": "Ensure overlay does not break YouTube navigation (SPA route changes)\n\n*Issue:* YouTube is a SPA — if user navigates away mid-Adhan the overlay must auto-clean",
+          "status": "To Do",
+          "labels": ["youtube", "spa", "overlay", "cleanup"]
+        },
+        {
+          "key": "E6-3",
+          "summary": "Prevent duplicate overlays from concurrent triggers",
+          "description": "Ensure overlay does not appear if a second `ADHAN_TRIGGER` arrives while one is already active\n\n*Current:* Guard exists in `AdhanOverlay.ts` (ID check)\n*Required:* Explicit test",
+          "status": "To Do",
+          "labels": ["overlay", "edge-cases", "testing"]
+        },
+        {
+          "key": "E6-4",
+          "summary": "Add skip/dismiss button to overlay (CRITICAL UX)",
+          "description": "**Add skip/dismiss button to overlay** — allow users to exit Adhan early and resume video\n\n*CRITICAL UX Feature*\n\n*Requirements:*\n- Add close button (×) + Escape key handler\n- When dismissed: stop audio, hide overlay, resume video\n- Send ADHAN_COMPLETE with `skipped: true` flag\n\n*Reference:* See `docs/E6-4_SKIP_DISMISS_IMPLEMENTATION.md`",
+          "status": "To Do",
+          "labels": ["ux", "critical", "overlay", "accessibility"]
+        }
+      ]
+    },
+    {
+      "key": "EPIC-7",
+      "summary": "Quality & Testing",
+      "description": "Set up testing infrastructure and comprehensive test coverage.",
+      "stories": [
+        {
+          "key": "E7-1",
+          "summary": "Configure Vitest as test runner",
+          "description": "Configure Vitest as the test runner — add to `package.json`, create `vitest.config.ts`\n\n*Current:* `scripts/test` is a placeholder stub",
+          "status": "To Do",
+          "labels": ["testing", "vitest", "setup"]
+        },
+        {
+          "key": "E7-2",
+          "summary": "Unit test YouTubePlayerController",
+          "description": "Unit test `YouTubePlayerController` — mock `document.querySelector`, verify pause/resume/isPlaying\n\n*Dependencies:* E7-1, E2-1",
+          "status": "To Do",
+          "labels": ["testing", "unit-test", "youtube"]
+        },
+        {
+          "key": "E7-3",
+          "summary": "Unit test AdhanOverlay",
+          "description": "Unit test `AdhanOverlay` — verify inject/remove/guard behaviour with JSDOM\n\n*Dependencies:* E7-1, E2-2",
+          "status": "To Do",
+          "labels": ["testing", "unit-test", "overlay"]
+        },
+        {
+          "key": "E7-4",
+          "summary": "Unit test scheduleAdhan use case",
+          "description": "Unit test `scheduleAdhan` use case — mock `alarmAdapter`, verify correct alarm time\n\n*Dependencies:* E7-1, E4-2",
+          "status": "To Do",
+          "labels": ["testing", "unit-test", "scheduling"]
+        },
+        {
+          "key": "E7-5",
+          "summary": "Unit test triggerAdhan use case",
+          "description": "Unit test `triggerAdhan` use case — mock `messagingAdapter`, verify message is sent to tabs\n\n*Dependencies:* E7-1, E2-6",
+          "status": "To Do",
+          "labels": ["testing", "unit-test", "messaging"]
+        },
+        {
+          "key": "E7-6",
+          "summary": "End-to-end smoke test",
+          "description": "End-to-end smoke test — load extension in Chrome, trigger alarm manually, verify full flow\n\n*Manual Test Checklist:*\n- ✓ Video pauses\n- ✓ Overlay appears\n- ✓ Audio plays\n- ✓ Overlay removed\n- ✓ Video resumes",
+          "status": "To Do",
+          "labels": ["testing", "e2e", "manual-test"]
+        }
+      ]
+    },
+    {
+      "key": "EPIC-8",
+      "summary": "Popup & Options UI",
+      "description": "Implement user-facing UI for popup and options pages.",
+      "stories": [
+        {
+          "key": "E8-1",
+          "summary": "Design popup UI with next prayer and test trigger",
+          "description": "Design popup UI — show next prayer name and time, manual \"test Adhan\" trigger button\n\n*File:* `popup/popup.ts` (currently placeholder)\n*Note:* Outside core MVP flow but useful for testing",
+          "status": "To Do",
+          "labels": ["ui", "popup", "testing"]
+        },
+        {
+          "key": "E8-2",
+          "summary": "Implement options page for prayer time configuration",
+          "description": "Implement options page — allow user to configure prayer times manually\n\n*File:* `options/options.ts` (currently placeholder)\n*Dependencies:* E4-1 decision about data source",
+          "status": "To Do",
+          "labels": ["ui", "options", "configuration"]
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "project": "AdanBrowser",
+    "description": "Chrome browser extension for prayer time notifications on YouTube",
+    "totalEpics": 8,
+    "totalStories": 41,
+    "completedStories": 9,
+    "inProgressStories": 0,
+    "todoStories": 32
+  }
+}

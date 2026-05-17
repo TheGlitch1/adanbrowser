@@ -86,7 +86,7 @@
 | E6-1 | Design and implement overlay visuals — background, typography, icon                            | `TODO` | Current styles in `AdhanOverlay.ts` are inline stubs. Keep it respectful and non-aggressive per `MVP_YOUTUBE_ADHAN.md`                                            |
 | E6-2 | Ensure overlay does not break YouTube navigation (SPA route changes)                           | `TODO` | YouTube is a SPA — if the user navigates away mid-Adhan the overlay must auto-clean                                                                               |
 | E6-3 | Ensure overlay does not appear if a second `ADHAN_TRIGGER` arrives while one is already active | `TODO` | Guard exists in `AdhanOverlay.ts` (ID check) — needs explicit test                                                                                                |
-| E6-4 | **Add skip/dismiss button to overlay** — allow users to exit Adhan early and resume video      | `TODO` | **CRITICAL UX**: Add close button (×) + Escape key handler. When dismissed: stop audio, hide overlay, resume video. Send ADHAN_COMPLETE with `skipped: true` flag |
+| E6-4 | **Add skip/dismiss button to overlay** — allow users to exit Adhan early and resume video      | `DONE` | **CRITICAL UX**: Add close button (×) + Escape key handler. When dismissed: stop audio, hide overlay, resume video. Send ADHAN_COMPLETE with `skipped: true` flag. ⚠️ Merged without manual test — see `MANUAL_TEST_CHECKLIST.md` E6-4 section |
 
 ---
 
