@@ -11,5 +11,9 @@ export type ExtensionMessage =
     }
   | {
       type: 'ADHAN_COMPLETE';
-      payload: { prayerName: string; resumed: boolean };
+      payload: { 
+        prayerName: string; 
+        resumed: boolean;
+        skipped?: boolean; // true if user dismissed early via close button or Escape key
+      };
     };
