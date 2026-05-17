@@ -36,36 +36,36 @@
 
 ## Epic 2 — Core Interruption Flow (YouTube MVP)
 
-| #    | Feature / Ticket                                                                                             | Status | Notes                                                                                                                                 |
-| ---- | ------------------------------------------------------------------------------------------------------------ | ------ | ------------------------------------------------------------------------------------------------------------------------------------- |
-| E2-1 | Implement `YouTubePlayerController` — detect, pause, resume `#movie_player video`                            | `DONE` | File scaffolded at `content/youtube/YouTubePlayerController.ts`. Selector must target primary player only, not ads/previews           |
-| E2-2 | Implement `AdhanOverlay` — inject styled overlay with i18n message, guard against duplicate instances        | `DONE` | File scaffolded at `content/youtube/AdhanOverlay.ts`. Styles are inline stubs — needs real design pass                                |
-| E2-3 | Implement `AdhanPlayer` — play `adhan.mp3` via `chrome.runtime.getURL`, fire `onEnded` callback              | `DONE` | File scaffolded at `content/youtube/AdhanPlayer.ts`. Requires E1-5 (audio asset)                                                      |
-| E2-4 | Wire content script interruption flow — `ADHAN_TRIGGER` → pause → overlay → play → resume → `ADHAN_COMPLETE` | `DONE` | Logic scaffolded in `content/index.ts`. Depends on E2-1, E2-2, E2-3                                                                   |
-| E2-5 | Implement `scheduleAdhan` use case — replace 10-second dev stub with real prayer time scheduling             | `TODO` | ⛔ **BLOCKED by E4-1** — prayer time data source not yet decided. Current stub fires alarm 10s from now for dev testing only. Unblock by completing E4-1 first |
-| E2-6 | Implement `triggerAdhan` use case — query YouTube tabs and dispatch `ADHAN_TRIGGER`                          | `DONE` | Scaffolded in `application/prayer/triggerAdhan.ts`. Logic is complete; needs integration test                                         |
-| E2-7 | Wire background service worker — `onAlarm` → `triggerAdhan`, `onInstalled`/`onStartup` → `scheduleAdhan`     | `DONE` | Scaffolded in `background/index.ts`. Depends on E2-5, E2-6                                                                            |
+| #    | Feature / Ticket                                                                                             | Status | Notes                                                                                                                                                    |
+| ---- | ------------------------------------------------------------------------------------------------------------ | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| E2-1 | Implement `YouTubePlayerController` — detect, pause, resume `#movie_player video`                            | `DONE` | File scaffolded at `content/youtube/YouTubePlayerController.ts`. Selector must target primary player only, not ads/previews                              |
+| E2-2 | Implement `AdhanOverlay` — inject styled overlay with i18n message, guard against duplicate instances        | `DONE` | File scaffolded at `content/youtube/AdhanOverlay.ts`. Styles are inline stubs — needs real design pass                                                   |
+| E2-3 | Implement `AdhanPlayer` — play `adhan.mp3` via `chrome.runtime.getURL`, fire `onEnded` callback              | `DONE` | File scaffolded at `content/youtube/AdhanPlayer.ts`. Requires E1-5 (audio asset)                                                                         |
+| E2-4 | Wire content script interruption flow — `ADHAN_TRIGGER` → pause → overlay → play → resume → `ADHAN_COMPLETE` | `DONE` | Logic scaffolded in `content/index.ts`. Depends on E2-1, E2-2, E2-3                                                                                      |
+| E2-5 | Implement `scheduleAdhan` use case — replace 10-second dev stub with real prayer time scheduling             | `DONE` | Real implementation in `application/prayer/scheduleAdhan.ts`. Reads from `chrome.storage.local`, falls back to `DEFAULT_PRAYER_TIMES`. Unblocked by E4-1 |
+| E2-6 | Implement `triggerAdhan` use case — query YouTube tabs and dispatch `ADHAN_TRIGGER`                          | `DONE` | Scaffolded in `application/prayer/triggerAdhan.ts`. Logic is complete; needs integration test                                                            |
+| E2-7 | Wire background service worker — `onAlarm` → `triggerAdhan`, `onInstalled`/`onStartup` → `scheduleAdhan`     | `DONE` | Scaffolded in `background/index.ts`. Depends on E2-5, E2-6                                                                                               |
 
 ---
 
 ## Epic 3 — Infrastructure Adapters
 
-| #    | Feature / Ticket                                                                             | Status | Notes                                                                                              |
-| ---- | -------------------------------------------------------------------------------------------- | ------ | -------------------------------------------------------------------------------------------------- |
-| E3-1 | Validate `alarmAdapter` — create alarm, verify it fires, verify `onAlarm` listener is called | `TODO` | Scaffolded at `infrastructure/alarms/alarmAdapter.ts`. Needs manual smoke test or unit test        |
-| E3-2 | Validate `messagingAdapter` — `sendToYouTubeTabs` queries correct tabs and delivers message  | `TODO` | Scaffolded at `infrastructure/messaging/messagingAdapter.ts`. Verify with a real open YouTube tab  |
-| E3-3 | Validate `storageAdapter` — get/set roundtrip on `chrome.storage.local`                      | `TODO` | Scaffolded at `infrastructure/storage/storageAdapter.ts`. Not yet used — will be needed for Epic 4 |
+| #    | Feature / Ticket                                                                             | Status | Notes                                                                                                                  |
+| ---- | -------------------------------------------------------------------------------------------- | ------ | ---------------------------------------------------------------------------------------------------------------------- |
+| E3-1 | Validate `alarmAdapter` — create alarm, verify it fires, verify `onAlarm` listener is called | `TODO` | Scaffolded at `infrastructure/alarms/alarmAdapter.ts`. Needs manual smoke test or unit test                            |
+| E3-2 | Validate `messagingAdapter` — `sendToYouTubeTabs` queries correct tabs and delivers message  | `TODO` | Scaffolded at `infrastructure/messaging/messagingAdapter.ts`. Verify with a real open YouTube tab                      |
+| E3-3 | Validate `storageAdapter` — get/set roundtrip on `chrome.storage.local`                      | `TODO` | Scaffolded at `infrastructure/storage/storageAdapter.ts`. Now used by `scheduleAdhan` (E4-1) — needs manual smoke test |
 
 ---
 
 ## Epic 4 — Prayer Time Scheduling
 
-| #    | Feature / Ticket                                                                                   | Status | Notes                                                                                               |
-| ---- | -------------------------------------------------------------------------------------------------- | ------ | --------------------------------------------------------------------------------------------------- |
-| E4-1 | Define `PrayerTime` data source for MVP — hardcoded daily times or user-configurable input         | `TODO` | Domain type exists at `domain/prayer/PrayerTime.ts`. Decision needed: static list vs. user settings |
-| E4-2 | Implement real `scheduleAdhan` use case — compute next prayer from current time and register alarm | `TODO` | Replaces the 10s dev stub. Depends on E4-1                                                          |
-| E4-3 | Persist prayer schedule to `chrome.storage.local` via `storageAdapter`                             | `TODO` | So the schedule survives service worker restarts. Depends on E4-2, E3-3                             |
-| E4-4 | Re-schedule after each completed Adhan cycle — `ADHAN_COMPLETE` triggers next `scheduleAdhan`      | `TODO` | Wire in `background/index.ts` once E4-2 is done                                                     |
+| #    | Feature / Ticket                                                                                   | Status | Notes                                                                                                                                                          |
+| ---- | -------------------------------------------------------------------------------------------------- | ------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| E4-1 | Define `PrayerTime` data source for MVP — hardcoded daily times or user-configurable input         | `DONE` | Decision: hardcoded `DEFAULT_PRAYER_TIMES` in `domain/prayer/PrayerTime.ts`. Stored under `prayerTimes` key in `chrome.storage.local` — overridable without UI |
+| E4-2 | Implement real `scheduleAdhan` use case — compute next prayer from current time and register alarm | `DONE` | `findNextPrayer` + `nextPrayerDate` pure functions in domain. `scheduleNextAdhan` reads storage, computes next, creates alarm                                  |
+| E4-3 | Persist prayer schedule to `chrome.storage.local` via `storageAdapter`                             | `DONE` | `scheduleNextAdhan` reads from storage on every call with `DEFAULT_PRAYER_TIMES` fallback — survives service worker restarts automatically                     |
+| E4-4 | Re-schedule after each completed Adhan cycle — `ADHAN_COMPLETE` triggers next `scheduleAdhan`      | `DONE` | Wired in `background/index.ts` — `ADHAN_COMPLETE` handler calls `scheduleNextAdhan(alarmAdapter, storageAdapter)`                                              |
 
 ---
 

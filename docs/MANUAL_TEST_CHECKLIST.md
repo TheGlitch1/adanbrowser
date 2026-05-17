@@ -120,31 +120,37 @@
 > This feature was merged without manual verification. Run these checks before release.
 
 **Setup:**
+
 - [ ] Run `npm run build:dev` and reload extension in Chrome
 - [ ] Navigate to a YouTube watch page (`/watch?v=...`)
 - [ ] Open DevTools console
 
 **Close button:**
+
 - [ ] Run `window.__testDismiss()` — overlay appears with a close button (×) in top-right corner
 - [ ] Click close button (×) — audio stops, overlay disappears, video resumes
 - [ ] Console logs show: `User dismissed` and `Dismiss test complete!`
 
 **Escape key:**
+
 - [ ] Run `window.__testDismiss()` again
 - [ ] Press `Escape` — audio stops, overlay disappears, video resumes
 - [ ] Console logs same success messages
 
 **Video was already paused:**
+
 - [ ] Pause the video manually before running `window.__testDismiss()`
 - [ ] Dismiss via close button or Escape
 - [ ] Video stays paused (not resumed) after dismiss
 
 **Audio completes naturally (no dismiss):**
+
 - [ ] Run `window.__testDismiss()` and do nothing
 - [ ] Adhan plays to completion
 - [ ] Console logs: `Audio ended naturally (user did not dismiss)` — overlay hides and video resumes
 
 **Double-dismiss guard:**
+
 - [ ] Click close button AND press Escape in rapid succession
 - [ ] No duplicate `complete` calls, no JS errors in console
 
