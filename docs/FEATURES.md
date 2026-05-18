@@ -52,9 +52,9 @@
 
 | #    | Feature / Ticket                                                                             | Status | Notes                                                                                                                  |
 | ---- | -------------------------------------------------------------------------------------------- | ------ | ---------------------------------------------------------------------------------------------------------------------- |
-| E3-1 | Validate `alarmAdapter` — create alarm, verify it fires, verify `onAlarm` listener is called | `TODO` | Scaffolded at `infrastructure/alarms/alarmAdapter.ts`. Needs manual smoke test or unit test                            |
-| E3-2 | Validate `messagingAdapter` — `sendToYouTubeTabs` queries correct tabs and delivers message  | `TODO` | Scaffolded at `infrastructure/messaging/messagingAdapter.ts`. Verify with a real open YouTube tab                      |
-| E3-3 | Validate `storageAdapter` — get/set roundtrip on `chrome.storage.local`                      | `TODO` | Scaffolded at `infrastructure/storage/storageAdapter.ts`. Now used by `scheduleAdhan` (E4-1) — needs manual smoke test |
+| E3-1 | Validate `alarmAdapter` — create alarm, verify it fires, verify `onAlarm` listener is called | `TODO` | ⚠️ NEEDS TESTING — see `MANUAL_TEST_CHECKLIST.md` E3-1 (inspect via background service worker DevTools)    |
+| E3-2 | Validate `messagingAdapter` — `sendToYouTubeTabs` queries correct tabs and delivers message  | `TODO` | ⚠️ NEEDS TESTING — see `MANUAL_TEST_CHECKLIST.md` E3-2 (manually dispatch from background DevTools)          |
+| E3-3 | Validate `storageAdapter` — get/set roundtrip on `chrome.storage.local`                      | `TODO` | ⚠️ NEEDS TESTING — see `MANUAL_TEST_CHECKLIST.md` E3-3 (write/read/delete via background DevTools console)  |
 
 ---
 
@@ -73,9 +73,9 @@
 
 | #    | Feature / Ticket                                                     | Status | Notes                                                                                                            |
 | ---- | -------------------------------------------------------------------- | ------ | ---------------------------------------------------------------------------------------------------------------- |
-| E5-1 | Verify `en` locale renders correctly in overlay                      | `TODO` | `_locales/en/messages.json` created. Test by setting Chrome language to English                                  |
-| E5-2 | Verify `ar` locale renders correctly in overlay (RTL text direction) | `TODO` | `_locales/ar/messages.json` created. Overlay may need `dir="rtl"` style for Arabic                               |
-| E5-3 | Add prayer name translations to locale files for both `en` and `ar`  | `TODO` | Currently the prayer name is passed raw (e.g. `"fajr"`). Should be capitalised/translated in the overlay message |
+| E5-1 | Verify `en` locale renders correctly in overlay                      | `TODO` | ⚠️ NEEDS TESTING — see `MANUAL_TEST_CHECKLIST.md` E5-1. Requires E5-3 (now done)                             |
+| E5-2 | Verify `ar` locale renders correctly in overlay (RTL text direction) | `TODO` | ⚠️ NEEDS TESTING — see `MANUAL_TEST_CHECKLIST.md` E5-2. `dir="auto"` added to overlay message element        |
+| E5-3 | Add prayer name translations to locale files for both `en` and `ar`  | `DONE` | `prayer_fajr` … `prayer_isha` keys added to both locales. Overlay calls `getMessage('prayer_${name}')` with raw fallback |
 
 ---
 
@@ -83,9 +83,9 @@
 
 | #    | Feature / Ticket                                                                               | Status | Notes                                                                                                                                                                                                                                          |
 | ---- | ---------------------------------------------------------------------------------------------- | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| E6-1 | Design and implement overlay visuals — background, typography, icon                            | `TODO` | Current styles in `AdhanOverlay.ts` are inline stubs. Keep it respectful and non-aggressive per `MVP_YOUTUBE_ADHAN.md`                                                                                                                         |
-| E6-2 | Ensure overlay does not break YouTube navigation (SPA route changes)                           | `TODO` | YouTube is a SPA — if the user navigates away mid-Adhan the overlay must auto-clean                                                                                                                                                            |
-| E6-3 | Ensure overlay does not appear if a second `ADHAN_TRIGGER` arrives while one is already active | `TODO` | Guard exists in `AdhanOverlay.ts` (ID check) — needs explicit test                                                                                                                                                                             |
+| E6-1 | Design and implement overlay visuals — background, typography, icon                            | `DONE` | Dark card, gradient, 🕌 icon, fade-in animation, backdrop blur. Respectful + non-aggressive per MVP spec           |
+| E6-2 | Ensure overlay does not break YouTube navigation (SPA route changes)                           | `DONE` | `yt-navigate-start` + `popstate` listeners in `content/index.ts`. Navigation calls `runCleanup()` — hides overlay + stops audio |
+| E6-3 | Ensure overlay does not appear if a second `ADHAN_TRIGGER` arrives while one is already active | `TODO` | ⚠️ NEEDS TESTING — guard exists (element ID check) but not manually verified. See `MANUAL_TEST_CHECKLIST.md` E6-3 |
 | E6-4 | **Add skip/dismiss button to overlay** — allow users to exit Adhan early and resume video      | `DONE` | **CRITICAL UX**: Add close button (×) + Escape key handler. When dismissed: stop audio, hide overlay, resume video. Send ADHAN_COMPLETE with `skipped: true` flag. ⚠️ Merged without manual test — see `MANUAL_TEST_CHECKLIST.md` E6-4 section |
 
 ---

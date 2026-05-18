@@ -8,5 +8,10 @@
         "example": "Dhuhr"
       }
     }
-  }
+  },
+  "prayer_fajr":    { "message": "Fajr",    "description": "Name of the Fajr prayer" },
+  "prayer_dhuhr":   { "message": "Dhuhr",   "description": "Name of the Dhuhr prayer" },
+  "prayer_asr":     { "message": "Asr",     "description": "Name of the Asr prayer" },
+  "prayer_maghrib": { "message": "Maghrib", "description": "Name of the Maghrib prayer" },
+  "prayer_isha":    { "message": "Isha",    "description": "Name of the Isha prayer" }
 }

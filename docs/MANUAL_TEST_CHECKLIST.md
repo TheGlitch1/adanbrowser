@@ -57,61 +57,79 @@
 
 ## Epic 3: Infrastructure Adapters
 
-### E3-1: Alarm Adapter
+> **How to inspect:** Open `chrome://extensions` → AdanBrowser → "Service Worker" → Inspect (opens DevTools for the background script)
 
-- [ ] Alarm is created on extension install
-- [ ] Alarm fires at scheduled time
-- [ ] `onAlarm` listener is triggered
+### E3-1: Alarm Adapter — ⚠️ NEEDS TESTING
 
-### E3-2: Messaging Adapter
+- [ ] Reload the extension — check background DevTools console for: `[AdanBrowser] Scheduled <prayer> at <time>`
+- [ ] Verify the alarm is registered: in background DevTools console run `chrome.alarms.getAll(console.log)` — should list the next prayer alarm
+- [ ] Wait for the alarm to fire (or temporarily set a prayer time 1 minute from now via storage) — `onAlarm` listener triggers and `[AdanBrowser] Adhan complete` should NOT appear yet (that's after content script responds)
+- [ ] Confirm alarm name matches the expected prayer name
 
-- [ ] Background can send messages to YouTube tabs
-- [ ] Content script receives `ADHAN_TRIGGER` message
-- [ ] Background receives `ADHAN_COMPLETE` message from content
+### E3-2: Messaging Adapter — ⚠️ NEEDS TESTING
 
-### E3-3: Storage Adapter
+- [ ] Open a YouTube watch page (`/watch?v=...`)
+- [ ] In background DevTools console, manually trigger: `chrome.tabs.query({url:'*://*.youtube.com/watch*'}, tabs => chrome.tabs.sendMessage(tabs[0].id, {type:'ADHAN_TRIGGER', payload:{prayerName:'dhuhr'}}))`
+- [ ] Verify content script receives the message: overlay should appear on the YouTube tab
+- [ ] After Adhan completes, verify background receives `ADHAN_COMPLETE`: background console should log `[AdanBrowser] Adhan complete {prayerName: 'dhuhr', ...}`
 
-- [ ] Data can be saved to `chrome.storage.local`
-- [ ] Data persists after extension reload
-- [ ] Data can be retrieved correctly
+### E3-3: Storage Adapter — ⚠️ NEEDS TESTING
+
+- [ ] In background DevTools console run: `chrome.storage.local.get(null, console.log)` — should show `{}` on first install (no stored prayer times yet, defaults are used)
+- [ ] Write a custom schedule: `chrome.storage.local.set({prayerTimes: [{name:'fajr',hour:5,minute:0},{name:'dhuhr',hour:13,minute:0},{name:'asr',hour:16,minute:30},{name:'maghrib',hour:19,minute:30},{name:'isha',hour:21,minute:0}]})`
+- [ ] Reload the extension — check background console: schedule should still log the correct prayer times (confirms persistence survived restart)
+- [ ] Clear the override: `chrome.storage.local.remove('prayerTimes')` — reload again — defaults should be used
 
 ---
 
 ## Epic 5: Localisation
 
-### E5-1: English Locale
+### E5-1: English Locale — ⚠️ NEEDS TESTING
 
-- [ ] Chrome language set to English
-- [ ] Overlay shows: "It is time for [prayer] prayer."
-- [ ] Prayer name is displayed correctly
+- [ ] Chrome language set to English (`chrome://settings/languages`)
+- [ ] Build and reload extension
+- [ ] Trigger overlay via `window.__testAdhanOverlay()` (dev build) or wait for alarm
+- [ ] Overlay shows: **"It is time for Dhuhr prayer."** (not raw `"dhuhr"`)
+- [ ] Prayer name is properly capitalised: `Fajr`, `Dhuhr`, `Asr`, `Maghrib`, `Isha`
 
-### E5-2: Arabic Locale
+### E5-2: Arabic Locale — ⚠️ NEEDS TESTING
 
-- [ ] Chrome language set to Arabic (العربية)
-- [ ] Overlay shows: "حان وقت صلاة [prayer]."
-- [ ] Text direction is RTL (if needed)
+- [ ] Chrome language set to Arabic: `chrome://settings/languages` → Add `العربية` → move to top → relaunch Chrome
+- [ ] Build and reload extension
+- [ ] Trigger overlay
+- [ ] Overlay shows: **"حان وقت صلاة الظهر."** (Arabic prayer name, not raw `"dhuhr"`)
+- [ ] Text renders right-to-left (Arabic text direction auto-detected via `dir="auto"`)
 
 ---
 
 ## Epic 6: Overlay UX
 
-### E6-1: Overlay Visuals
+### E6-1: Overlay Visuals — ⚠️ NEEDS TESTING
 
-- [ ] Overlay background is respectful (not aggressive)
-- [ ] Typography is readable
-- [ ] Animation is smooth (if added)
+- [ ] Trigger overlay — a **dark card** appears centered on screen (not just floating text)
+- [ ] Card has rounded corners, dark blue gradient background, mosque icon (🕌) at top
+- [ ] Prayer reminder text is white, readable, properly sized
+- [ ] Overlay fades in with a subtle scale animation
+- [ ] Dark semi-transparent backdrop blurs the page behind it
+- [ ] Design feels respectful and non-aggressive
 
-### E6-2: SPA Navigation
+### E6-2: SPA Navigation — ⚠️ NEEDS TESTING
 
-- [ ] Trigger overlay on video page
-- [ ] Navigate to another YouTube page (SPA route change)
-- [ ] Overlay auto-cleans up (no orphaned overlay)
+- [ ] Trigger overlay on a YouTube watch page
+- [ ] While overlay is visible and audio is playing, click a YouTube video link (SPA navigation)
+- [ ] Overlay disappears immediately on navigation (no orphaned overlay on the new page)
+- [ ] Audio stops immediately on navigation
+- [ ] No JS errors in console
+- [ ] Test also with browser back button while overlay is active
 
-### E6-3: Duplicate Prevention
+### E6-3: Duplicate Prevention — ⚠️ NEEDS TESTING
 
-- [ ] Trigger overlay multiple times rapidly
-- [ ] Only one overlay instance appears
-- [ ] No visual glitches or stacking
+> Guard is implemented via element ID check in `AdhanOverlay.ts` — needs explicit verification.
+
+- [ ] In DevTools console, run `window.__testAdhanOverlay()` twice in rapid succession
+- [ ] Only **one** overlay appears (second call is a no-op)
+- [ ] No duplicate `adanbrowser-adhan-overlay` elements in the DOM (verify via Elements panel)
+- [ ] No visual stacking or flicker
 
 ### E6-4: Skip / Dismiss — ⚠️ NEEDS TESTING
 
