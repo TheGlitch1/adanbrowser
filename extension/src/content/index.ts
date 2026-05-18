@@ -4,6 +4,7 @@
 //   - Listen for ADHAN_TRIGGER from the background service worker
 //   - Orchestrate the interruption flow: pause → show overlay → play Adhan → resume
 //   - Report ADHAN_COMPLETE back to background when the flow ends
+//   - Clean up the active session if the user navigates away mid-Adhan (E6-2)
 //
 // Rules:
 //   - Must be lightweight and non-blocking
@@ -16,9 +17,26 @@ import { createAdhanOverlay } from './youtube/AdhanOverlay';
 import { createAdhanPlayer } from './youtube/AdhanPlayer';
 import type { ExtensionMessage } from '@shared/messages';
 
+// E6-2: Track the active session so it can be torn down on SPA navigation.
+// At most one Adhan cycle can be active at a time.
+let activeCleanup: (() => void) | null = null;
+
+const runCleanup = () => {
+  activeCleanup?.();
+  activeCleanup = null;
+};
+
+// YouTube fires 'yt-navigate-start' just before a SPA route change
+document.addEventListener('yt-navigate-start', runCleanup);
+// Browser back/forward button
+window.addEventListener('popstate', runCleanup);
+
 chrome.runtime.onMessage.addListener((message) => {
   const msg = message as ExtensionMessage;
   if (msg.type !== 'ADHAN_TRIGGER') return;
+
+  // If a previous session somehow never completed, clean it up first
+  runCleanup();
 
   const { prayerName } = msg.payload;
   const player = createYouTubePlayerController();
@@ -28,10 +46,18 @@ chrome.runtime.onMessage.addListener((message) => {
   const wasPlaying = player?.isPlaying() ?? false;
   player?.pause();
 
+  // Register cleanup so navigation can tear this session down
+  activeCleanup = () => {
+    overlay.hide();
+    adhan.stop();
+    // No ADHAN_COMPLETE sent — user navigated away, not a normal cycle end
+  };
+
   // Shared completion logic for both natural end and early dismiss
   const complete = (skipped: boolean = false) => {
+    activeCleanup = null; // unregister before acting to avoid double-cleanup
     overlay.hide();
-    adhan.stop(); // Stop audio if still playing
+    adhan.stop();
     if (wasPlaying) player?.resume();
 
     chrome.runtime.sendMessage({
@@ -42,13 +68,11 @@ chrome.runtime.onMessage.addListener((message) => {
 
   // Show overlay with dismiss handler
   overlay.show(prayerName, () => {
-    // User dismissed early (close button or Escape key)
     complete(true);
   });
 
   // Play audio with natural completion handler
   adhan.play(() => {
-    // Audio finished naturally
     complete(false);
   });
 });

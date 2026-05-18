@@ -8,5 +8,10 @@
         "example": "الظهر"
       }
     }
-  }
+  },
+  "prayer_fajr":    { "message": "الفجر",   "description": "اسم صلاة الفجر" },
+  "prayer_dhuhr":   { "message": "الظهر",   "description": "اسم صلاة الظهر" },
+  "prayer_asr":     { "message": "العصر",   "description": "اسم صلاة العصر" },
+  "prayer_maghrib": { "message": "المغرب",  "description": "اسم صلاة المغرب" },
+  "prayer_isha":    { "message": "العشاء",  "description": "اسم صلاة العشاء" }
 }
