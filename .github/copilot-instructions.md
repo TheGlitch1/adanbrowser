@@ -116,10 +116,24 @@ extension/src/
 
 Follow the clean architecture layers. Use the prompt template at `.github/prompts/feature.prompt.md`.
 
-## Feature Tracker
+## Feature Trackers
 
-`docs/FEATURES.md` is the **single source of truth** for all planned and completed work.
+There are two sprint trackers. Always determine which sprint is active before starting work.
 
-- Always read it before starting a new feature or ticket.
+| File                       | Sprint              | Purpose                                                             |
+| -------------------------- | ------------------- | ------------------------------------------------------------------- |
+| `docs/FEATURES.md`         | Sprint 1 — MVP      | Core YouTube interruption flow, scheduling, overlay, i18n, UX       |
+| `docs/SPRINT2_FEATURES.md` | Sprint 2 — Post-MVP | Real prayer times, store publication, Firefox, additional platforms |
+
+**Active sprint rules:**
+
+- If `docs/FEATURES.md` has any `TODO` ticket → work Sprint 1 only.
+- If all Sprint 1 tickets are `DONE` → switch to `docs/SPRINT2_FEATURES.md`.
+- Always read features before starting a new feature or ticket.
 - Use `.github/prompts/next-ticket.prompt.md` to pick and implement the next item.
+- Use `.github/prompts/resume.prompt.md` to restore full context at the start of each session.
 - Statuses: `TODO` · `IN PROGRESS` · `DONE`.
+  **Scope boundaries:**
+- Sprint 1 scope: `docs/MVP_YOUTUBE_ADHAN.md`
+- Sprint 2 scope: `docs/POST_MVP_ROADMAP.md`
+- Do not implement Sprint 2 features while Sprint 1 tickets remain open.

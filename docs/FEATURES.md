@@ -50,11 +50,11 @@
 
 ## Epic 3 — Infrastructure Adapters
 
-| #    | Feature / Ticket                                                                             | Status | Notes                                                                                                                  |
-| ---- | -------------------------------------------------------------------------------------------- | ------ | ---------------------------------------------------------------------------------------------------------------------- |
+| #    | Feature / Ticket                                                                             | Status | Notes                                                                                                      |
+| ---- | -------------------------------------------------------------------------------------------- | ------ | ---------------------------------------------------------------------------------------------------------- |
 | E3-1 | Validate `alarmAdapter` — create alarm, verify it fires, verify `onAlarm` listener is called | `TODO` | ⚠️ NEEDS TESTING — see `MANUAL_TEST_CHECKLIST.md` E3-1 (inspect via background service worker DevTools)    |
-| E3-2 | Validate `messagingAdapter` — `sendToYouTubeTabs` queries correct tabs and delivers message  | `TODO` | ⚠️ NEEDS TESTING — see `MANUAL_TEST_CHECKLIST.md` E3-2 (manually dispatch from background DevTools)          |
-| E3-3 | Validate `storageAdapter` — get/set roundtrip on `chrome.storage.local`                      | `TODO` | ⚠️ NEEDS TESTING — see `MANUAL_TEST_CHECKLIST.md` E3-3 (write/read/delete via background DevTools console)  |
+| E3-2 | Validate `messagingAdapter` — `sendToYouTubeTabs` queries correct tabs and delivers message  | `TODO` | ⚠️ NEEDS TESTING — see `MANUAL_TEST_CHECKLIST.md` E3-2 (manually dispatch from background DevTools)        |
+| E3-3 | Validate `storageAdapter` — get/set roundtrip on `chrome.storage.local`                      | `TODO` | ⚠️ NEEDS TESTING — see `MANUAL_TEST_CHECKLIST.md` E3-3 (write/read/delete via background DevTools console) |
 
 ---
 
@@ -71,10 +71,10 @@
 
 ## Epic 5 — Localisation
 
-| #    | Feature / Ticket                                                     | Status | Notes                                                                                                            |
-| ---- | -------------------------------------------------------------------- | ------ | ---------------------------------------------------------------------------------------------------------------- |
-| E5-1 | Verify `en` locale renders correctly in overlay                      | `TODO` | ⚠️ NEEDS TESTING — see `MANUAL_TEST_CHECKLIST.md` E5-1. Requires E5-3 (now done)                             |
-| E5-2 | Verify `ar` locale renders correctly in overlay (RTL text direction) | `TODO` | ⚠️ NEEDS TESTING — see `MANUAL_TEST_CHECKLIST.md` E5-2. `dir="auto"` added to overlay message element        |
+| #    | Feature / Ticket                                                     | Status | Notes                                                                                                                    |
+| ---- | -------------------------------------------------------------------- | ------ | ------------------------------------------------------------------------------------------------------------------------ |
+| E5-1 | Verify `en` locale renders correctly in overlay                      | `TODO` | ⚠️ NEEDS TESTING — see `MANUAL_TEST_CHECKLIST.md` E5-1. Requires E5-3 (now done)                                         |
+| E5-2 | Verify `ar` locale renders correctly in overlay (RTL text direction) | `TODO` | ⚠️ NEEDS TESTING — see `MANUAL_TEST_CHECKLIST.md` E5-2. `dir="auto"` added to overlay message element                    |
 | E5-3 | Add prayer name translations to locale files for both `en` and `ar`  | `DONE` | `prayer_fajr` … `prayer_isha` keys added to both locales. Overlay calls `getMessage('prayer_${name}')` with raw fallback |
 
 ---
@@ -83,9 +83,9 @@
 
 | #    | Feature / Ticket                                                                               | Status | Notes                                                                                                                                                                                                                                          |
 | ---- | ---------------------------------------------------------------------------------------------- | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| E6-1 | Design and implement overlay visuals — background, typography, icon                            | `DONE` | Dark card, gradient, 🕌 icon, fade-in animation, backdrop blur. Respectful + non-aggressive per MVP spec           |
-| E6-2 | Ensure overlay does not break YouTube navigation (SPA route changes)                           | `DONE` | `yt-navigate-start` + `popstate` listeners in `content/index.ts`. Navigation calls `runCleanup()` — hides overlay + stops audio |
-| E6-3 | Ensure overlay does not appear if a second `ADHAN_TRIGGER` arrives while one is already active | `TODO` | ⚠️ NEEDS TESTING — guard exists (element ID check) but not manually verified. See `MANUAL_TEST_CHECKLIST.md` E6-3 |
+| E6-1 | Design and implement overlay visuals — background, typography, icon                            | `DONE` | Dark card, gradient, 🕌 icon, fade-in animation, backdrop blur. Respectful + non-aggressive per MVP spec                                                                                                                                       |
+| E6-2 | Ensure overlay does not break YouTube navigation (SPA route changes)                           | `DONE` | `yt-navigate-start` + `popstate` listeners in `content/index.ts`. Navigation calls `runCleanup()` — hides overlay + stops audio                                                                                                                |
+| E6-3 | Ensure overlay does not appear if a second `ADHAN_TRIGGER` arrives while one is already active | `TODO` | ⚠️ NEEDS TESTING — guard exists (element ID check) but not manually verified. See `MANUAL_TEST_CHECKLIST.md` E6-3                                                                                                                              |
 | E6-4 | **Add skip/dismiss button to overlay** — allow users to exit Adhan early and resume video      | `DONE` | **CRITICAL UX**: Add close button (×) + Escape key handler. When dismissed: stop audio, hide overlay, resume video. Send ADHAN_COMPLETE with `skipped: true` flag. ⚠️ Merged without manual test — see `MANUAL_TEST_CHECKLIST.md` E6-4 section |
 
 ---
@@ -161,3 +161,15 @@ E6-1 → E6-2 → E6-3           (UX polish)
 E7-1 → E7-2..E7-6            (testing)
 E8-1 → E8-2                   (popup / options, last — not blocking MVP flow)
 ```
+
+---
+
+## Sprint Handoff
+
+When all tickets above are `DONE` and all `⚠️ NEEDS TESTING` items in `docs/MANUAL_TEST_CHECKLIST.md` are verified:
+
+➡️ **Continue in `docs/SPRINT2_FEATURES.md`**
+
+Sprint 2 covers: real prayer times via `adhan-js`, Chrome Web Store publication, Firefox support, additional video platforms, and enhanced UX.
+
+Full vision: `docs/POST_MVP_ROADMAP.md`
